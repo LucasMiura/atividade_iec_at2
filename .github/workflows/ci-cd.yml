@@ -1,0 +1,43 @@
+name: CI/CD Java
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache do Maven
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/io/github/spotbugs/spotbugs
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Instalar dependências e rodar testes
+        run: mvn -B test
+
+      - name: Gerar artefato .jar
+        run: mvn -B package
+
+      - name: Salvar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
