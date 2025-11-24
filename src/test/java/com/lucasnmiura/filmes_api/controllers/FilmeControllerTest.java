@@ -1,4 +1,4 @@
-package com.seunome.filmesapi.controllers;
+package com.lucasnmiura.filmes_api.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,3 +38,4 @@ public class FilmeControllerTest {
                 .andExpect(content().string("O melhor filme de 2024 foi Duna 2"));
     }
 }
+

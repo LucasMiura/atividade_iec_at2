@@ -1,4 +1,4 @@
-package com.seunome.filmesapi.controllers;
+package com.lucasnmiura.filmes_api.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
