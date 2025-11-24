@@ -2,49 +2,32 @@ name: CI/CD Java
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   pull_request:
-    branches: [ main ]
+    branches: ["main"]
 
-jobs: 
-    ci:
-      runs-on: ubuntu-latest
-      
-      steps:      
-        - name: Checkout do código
-          uses: actions/checkout@v4
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-        - name: Configurar Java 17
-          uses: actions/setup-java@v4
-          with:
-            java-version: '17'
-            distribution: 'temurin'
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
 
-        - name: Executar testes
-          run: mvn -B test --file pom.xml
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    cd:
-      needs: ci    
+      - name: Instalar dependências e rodar testes
+        run: mvn -B test
 
-      if: github.ref == 'refs/heads/main'
+      - name: Gerar artefato .jar
+        run: mvn -B package
 
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Checkout do código
-          uses: actions/checkout@v4
-
-        - name: Configurar Java 17
-          uses: actions/setup-java@v4
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-
-        - name: Gerar JAR para deploy
-          run: mvn -B clean package
-
-        - name: Upload JAR para deploy
-          uses: actions/upload-artifact@v4
-          with:
-            name: app-jar
-            path: target/*.jar
+      - name: Salvar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
