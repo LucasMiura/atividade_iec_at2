@@ -8,43 +8,43 @@ on:
 
 jobs: 
     ci:
-    runs-on: ubuntu-latest
-    
-    steps:      
-      - name: Checkout do código
-        uses: actions/checkout@v4
+      runs-on: ubuntu-latest
+      
+      steps:      
+        - name: Checkout do código
+          uses: actions/checkout@v4
 
-      - name: Configurar Java 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        - name: Configurar Java 17
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'temurin'
 
-      - name: Executar testes
-        run: mvn -B test --file pom.xml
+        - name: Executar testes
+          run: mvn -B test --file pom.xml
 
-  cd:
-    needs: ci    
+    cd:
+      needs: ci    
 
-    if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
 
-    runs-on: ubuntu-latest
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout do código
+          uses: actions/checkout@v4
 
-      - name: Configurar Java 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        - name: Configurar Java 17
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'temurin'
 
-      - name: Gerar JAR para deploy
-        run: mvn -B clean package
+        - name: Gerar JAR para deploy
+          run: mvn -B clean package
 
-      - name: Upload JAR para deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-jar
-          path: target/*.jar
+        - name: Upload JAR para deploy
+          uses: actions/upload-artifact@v4
+          with:
+            name: app-jar
+            path: target/*.jar
